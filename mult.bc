@@ -1,0 +1,82 @@
+scale=100
+
+define dev(x) {
+  return (2.^(x-52))
+}
+
+define eps(x) {
+  return (dev(x) / 2)
+}
+
+define min(x) {
+  return (2.^x)
+}
+
+define max(x) {
+  return (min(x+1.) - dev(x))
+}
+
+define log(x, y) {
+  return (l(x) / l(y))
+}
+
+define roundtoneginf(x) {
+  auto orig, h
+  orig=scale
+  scale=0
+  if (x!=x/1 && x<0) x-=1
+  x/=1
+  scale=orig
+  return (x)
+}
+
+define rounddown(x) {
+  auto s
+  s=scale
+  scale=0
+  x/=1
+  scale=s
+  return (x)
+}
+
+define multerror(x) {
+  if (x<0) return (4. * eps(x) * max(x))
+  return (4. * eps(x) * max(x) + 2.^(2. * x - 53.))
+}
+
+define printsci(x) {
+  auto s, e, k
+  s=scale
+  e=roundtoneginf(log(x, 10))
+  k=10^-e
+  scale=5
+  print x*k/1, "\\times10^", e
+  scale=s
+}
+
+define line(x) {
+  print x, "\t~"
+  printsci(min(x))
+  print "\t~"
+  printsci(max(x))
+  print "\t~"
+  printsci(eps(x))
+  print "\t~"
+  printsci(multerror(x))
+  print "\n"
+}
+
+line(-20)
+line(-17)
+line(-14)
+line(-11)
+line(-8)
+line(-5)
+line(-2)
+line(1)
+line(4)
+line(7)
+line(10)
+line(13)
+line(16)
+line(19)
